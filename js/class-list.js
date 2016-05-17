@@ -73,6 +73,14 @@ class ClassList extends Component {
   	return (
       <View style={styles.container}>
         <View style={styles.bar}/>
+        <View style={styles.navigation}>
+          <Text style={styles.navTitle}>{'Classes'}</Text>
+          <TouchableHighlight 
+            underlayColor='transparent' 
+            onPress={() => this.props.onLogout()}>
+            <Text style={styles.navButton}>{'Logout'}</Text>
+          </TouchableHighlight>
+        </View>
         {header}
         {body}
       </View>
@@ -103,6 +111,24 @@ let styles = StyleSheet.create({
   bar: {
     backgroundColor: '#555358',
     height: 24
+  },
+  navigation: {
+    height: 40,
+    backgroundColor: '#777579',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  navTitle: {
+    flex: 1,
+    textAlign: 'center',
+    color: '#FFFFFF'
+  },
+  navButton: {
+    textAlign: 'center',
+    color: '#FFFFFF',
+    paddingRight: 8,
+    paddingLeft: 8
   },
   loading: {
     flex: 1,

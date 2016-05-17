@@ -33,7 +33,8 @@ class ClassDetail extends Component {
 
   me() {
   	const uid = this.props.user.uid
-  	return this.props.detail.students[uid]
+  	const students = this.props.detail.students || {}
+  	return students[uid]
   }
 
   statusColor(status) {
@@ -98,19 +99,19 @@ class ClassDetail extends Component {
   			if (me.status === 'rejected') {
   				action = (
 					<Text style={[styles.status, {backgroundColor: '#d9534f'}]}>
-						{'Rejected'}
+						{'Attendence status: Rejected'}
 					</Text>
 				)
   			} else if (me.status === 'accepted') {
 	  			action = (
 					<Text style={[styles.status, {backgroundColor: '#5cb85c'}]}>
-						{'Accepted'}
+						{'Attendence status: Accepted'}
 					</Text>
 				)
   			} else {
 	  			action = (
 					<Text style={[styles.status, {backgroundColor: '#CCC'}]}>
-						{'Request Pending'}
+						{'Attendence status: Request Pending'}
 					</Text>
 				)  				
   			}
@@ -123,7 +124,7 @@ class ClassDetail extends Component {
 	  	}
   	}
 
-	const students = Object.keys(this.props.detail.students)
+	const students = Object.keys(this.props.detail.students || {})
 	const studentList = students.map((uid) => {
 		const student = this.props.detail.students[uid]
 		if (this.props.user.role !== 'Student') {		
@@ -159,7 +160,7 @@ class ClassDetail extends Component {
         	<Text style={styles.navTitle}>{'Class Details'}</Text>
         	<TouchableHighlight 
         		underlayColor='transparent' 
-				onPress={() => console.log('logout')}>
+				onPress={() => this.props.onLogout()}>
         		<Text style={styles.navButton}>{'Logout'}</Text>
     		</TouchableHighlight>
         </View>
@@ -169,6 +170,7 @@ class ClassDetail extends Component {
     			{primary}
     			{action}
     			<Text style={{marginTop: 16, textAlign: 'center'}}>{'Students Attenting this class'}</Text>
+    			<View style={{height: 1, backgroundColor: '#ccc', marginTop: 8, marginBottom: 8}}/>
     			{studentList}
     		</View>
     	</ScrollView>

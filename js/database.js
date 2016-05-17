@@ -9,6 +9,10 @@ const database = {
 	login: function(email, password, callback) {
 		firebase.authWithPassword({email, password}, callback)
 	},
+	logout: function(callback) {
+		firebase.unauth();
+		callback();
+	},
 	signup: function(email, password, role, callback) {
 		firebase.createUser({email,password}, (error, data) => {
 			if (!error) {

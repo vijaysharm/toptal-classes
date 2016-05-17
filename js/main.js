@@ -32,6 +32,7 @@ class App extends Component {
             user={this.props.login}
             detail={this.props.classitem}
             onUpdateClass={this.props.classes.updateClass}
+            onLogout={this.props.user.logout}
             onSelectStudent={(uid) => {
               console.log('selected student ' + uid)
               navigator.push({
@@ -50,6 +51,7 @@ class App extends Component {
             user={this.props.login}
             detail={this.props.classitem}
             onUpdateClass={this.props.classes.updateClass}
+            onLogout={this.props.user.logout}
             student={route.uid}
             />
         );
@@ -61,6 +63,7 @@ class App extends Component {
           user={this.props.login}
           list={this.props.classlist}
           onAddClass={this.props.classes.addClass}
+          onLogout={this.props.user.logout}
           onSelectClass={(item) => {
             this.props.classes.selectClass(item)
             navigator.push({
@@ -112,5 +115,8 @@ let styles = StyleSheet.create({
 export default connect((state) => {
 	return {login} = state
 }, (dispatch) => {
-  return {classes: bindActionCreators(Object.assign({}, actions.classes), dispatch)}
+  return {
+    user: bindActionCreators(Object.assign({}, actions.user), dispatch),
+    classes: bindActionCreators(Object.assign({}, actions.classes), dispatch)
+  }
 })(App)

@@ -76,8 +76,10 @@ const signup = (username, password, role) => {
 
 const logout = () => {
 	return (dispatch) => {
-		dispatch({
-			type: Types.LOGIN.LOGOUT
+		database.logout(() => {
+			dispatch({
+				type: Types.LOGIN.LOGOUT
+			})			
 		})
 	}
 }
