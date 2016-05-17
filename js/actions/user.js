@@ -1,11 +1,43 @@
 import Types from '../constants/types'
 import database from '../database'
 
+const doLogin = (database, dispatch, username, password) => {
+	database.login(username, password, (error, data) => {
+		if (error) {
+			dispatch({
+				type: Types.LOGIN.ERROR,
+				cause: error.message
+			})
+		} else {
+			console.log('login success')
+			console.log(data)
+			database.watchUser(data.uid, (error, user) => {
+				dispatch({
+					type: Types.LOGIN.SUCCESS,
+					uid: data.uid,
+					username: user.email,
+					role: user.role
+				})
+			})
+		}
+	})
+}
+
 const watchLogin = () => {
 	return (dispatch, getState) => {
 		database.watchLogin((data) => {
 			console.log('Got login data')
 			console.log(data)
+			// if (data && data.uid) {
+			// 	database.watchUser(data.uid, (error, user) => {
+			// 		dispatch({
+			// 			type: Types.LOGIN.SUCCESS,
+			// 			uid: data.uid,
+			// 			username: user.email,
+			// 			role: user.role
+			// 		})
+			// 	})
+			// }
 		})
 	}
 }
@@ -16,23 +48,7 @@ const login = (username, password) => {
 			type: Types.LOGIN.IN_PROGRESS
 		})
 
-		database.login(username, password, (error, data) => {
-			if (error) {
-				dispatch({
-					type: Types.LOGIN.ERROR,
-					cause: error.message
-				})
-			} else {
-				console.log('login success')
-				console.log(data)
-				dispatch({
-					type: Types.LOGIN.SUCCESS,
-					uid: undefined,
-					username: undefined,
-					role: undefined
-				})
-			}
-		})
+		doLogin(database, dispatch, username, password);
 	}
 }
 
@@ -52,22 +68,7 @@ const signup = (username, password, role) => {
 			} else {
 				console.log('signup success')
 				console.log(data)
-				database.login(username, password, (error, data) => {
-					if (error) {
-						dispatch({
-							type: Types.LOGIN.ERROR,
-							cause: error.message
-						})
-					} else {
-						console.log('login success')
-						console.log(data)
-						dispatch({
-							type: Types.LOGIN.SUCCESS,
-							username: username,
-							role: role
-						})
-					}
-				})
+				doLogin(database, dispatch, username, password);
 			}
 		});
 	}

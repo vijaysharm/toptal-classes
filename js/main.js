@@ -1,14 +1,13 @@
 import React from 'react-native'
 import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
 
+import actions from './actions'
 import Login from './login'
 import SignUp from './signup'
-import AdminMenu from './admin-menu'
-import TeacherClassList from './teacher-class-list'
-import TeacherClassDetail from './teacher-class-detail'
-import TeacherClassDetailStudent from './teacher-class-detail-student'
-import StudentClassList from './student-class-list'
-import StudentClassDetail from './student-class-detail'
+import ClassList from './class-list'
+import ClassDetail from './class-detail'
+import ClassDetailStudent from './class-detail-student'
 
 let {
   Component,
@@ -25,47 +24,65 @@ class App extends Component {
   }
 
   componentWillReceiveProps (props) {
-  	console.log('will receive ' + props);
+  	
   }
 
   renderScene(route, navigator) {
-  	if (route.name === 'admin-menu') {
-		return (<AdminMenu navigator={navigator}/>);
-  	}
+    if (this.isLoggedIn(this.props.login)) {
+    	if (route.name === 'class-detail') {
+  		  return (
+          <ClassDetail 
+            navigator={navigator}
+            user={this.props.login}
+            detail={this.props.classitem}
+            onUpdateClass={this.props.classes.updateClass}
+            />
+        )
+    	}
 
-  	if (route.name === 'student-class-list') {
-		return (<StudentClassList navigator={navigator}/>);
-  	}
+    	if (route.name === 'class-detail-student') {
+  		  return (
+          <ClassDetailStudent 
+            navigator={navigator}
+            user={this.props.login}
+            detail={route.detail}
+            />
+        );
+    	}
 
-	if (route.name === 'student-class-detail') {
-		return (<StudentClassDetail navigator={navigator}/>);
-  	}
-
-  	if (route.name === 'teacher-class-list') {
-		return (<TeacherClassList navigator={navigator}/>);
-  	}
-
-  	if (route.name === 'teacher-class-detail') {
-		return (<TeacherClassDetail navigator={navigator}/>);
-  	}
-
-  	if (route.name === 'teacher-class-detail-student') {
-		return (<TeacherClassDetailStudent navigator={navigator}/>);
-  	}
+      return (
+        <ClassList 
+          navigator={navigator}
+          user={this.props.login}
+          list={this.props.classlist}
+          onAddClass={this.props.classes.addClass}
+          onSelectClass={(item) => {
+            this.props.classes.selectClass(item)
+            navigator.push({
+              name: 'class-detail'
+            })
+          }}
+          />
+        );
+    }
 
   	if (route.name === 'sign-up') {
-		return (<SignUp navigator={navigator}/>);
+		  return (<SignUp navigator={navigator}/>);
   	}
 
   	return (<Login navigator={navigator}/>);
   }
 
+  isLoggedIn(user) {
+    return user && user.uid && user.role
+  }
+
   configureScene(route) {
-	if (Platform.OS === 'android') {
-		return Navigator.SceneConfigs.FloatFromBottomAndroid;
-	} else {
-		return Navigator.SceneConfigs.FloatFromRight;
-	}
+  	if (Platform.OS === 'android') {
+  		return Navigator.SceneConfigs.FloatFromBottomAndroid;
+  	} else {
+  		return Navigator.SceneConfigs.FloatFromRight;
+  	}
   }
 
   render() {
@@ -74,7 +91,7 @@ class App extends Component {
       	ref='navigator'
         style={styles.container}
         configureScene={this.configureScene}
-        renderScene={this.renderScene}
+        renderScene={this.renderScene.bind(this)}
         initialRoute={{}}
       />
     )
@@ -90,5 +107,5 @@ let styles = StyleSheet.create({
 export default connect((state) => {
 	return {login} = state
 }, (dispatch) => {
-	return {}
+  return {classes: bindActionCreators(Object.assign({}, actions.classes), dispatch)}
 })(App)

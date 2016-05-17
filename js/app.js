@@ -10,6 +10,7 @@ import store from './store'
 
 setTimeout(() => {
 	store.dispatch(actions.user.watchLogin())
+	store.dispatch(actions.classes.watchClasses())
 })
 
 module.exports = React.createClass({

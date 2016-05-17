@@ -1,15 +1,14 @@
 import React from 'react-native'
-import {connect} from 'react-redux'
 
 let {Component, StyleSheet, Text} = React
 
-class AdminMenu extends Component {
+class ClassDetailStudent extends Component {
   constructor(props) {
     super(props)
   }
 
   render() {
-  	return (<Text>{'AdminMenu'}</Text>)
+  	return (<Text>{'ClassDetailStudent'}</Text>)
   }
 }
 
@@ -19,8 +18,4 @@ let styles = StyleSheet.create({
   }
 })
 
-export default connect((state) => {
-	return {}
-}, (dispatch) => {
-	return {}
-})(AdminMenu)
+export default ClassDetailStudent

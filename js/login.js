@@ -9,8 +9,8 @@ class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
-    	email: props.login.username,
-    	password: ''
+    	email: 'vijay@toptal.com', //props.login.username,
+    	password: 'pass'
     }
   }
 
@@ -35,7 +35,7 @@ class Login extends Component {
 	  			<TextInput 
 	  				style={[styles.textInput]}
 	  				onChangeText={(text) => this.setState({email: text})}
-	  				vale={this.state.email}
+	  				value={this.state.email}
 	  				placeholder={'Email'}
 					autoCapitalize={'none'}
 					keyboardType={'email-address'}
@@ -46,7 +46,7 @@ class Login extends Component {
 	  			<TextInput 
 	  				style={[styles.textInput]}
 	  				onChangeText={(text) => this.setState({password: text})}
-	  				vale={this.state.password}
+	  				value={this.state.password}
 	  				placeholder={'password'}
 	  				secureTextEntry={true}
 	  				/>
