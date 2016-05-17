@@ -10,6 +10,13 @@ class ClassDetail extends Component {
     }
   }
 
+  componentWillReceiveProps (props) {
+  	this.setState({
+  		title: props.detail.title || '',
+    	description: props.detail.description || ''
+  	})
+  }
+
   attendClass() {
   	var students = {}
   	students[this.props.user.uid] = {
@@ -20,7 +27,8 @@ class ClassDetail extends Component {
   }
 
   saveChanges() {
-	console.log('Save changes')
+  	var {title, description} = this.state
+	this.props.onUpdateClass(this.props.detail.cid, {title, description})
   }
 
   me() {
@@ -28,37 +36,62 @@ class ClassDetail extends Component {
   	return this.props.detail.students[uid]
   }
 
+  statusColor(status) {
+  	if (status === 'accepted') { return '#5cb85c' }
+  	else if (status === 'rejected') { return '#d9534f' }
+  	else { return '#ccc' }
+  }
+
   render() {
   	var title
   	if (this.props.user.role !== 'Student') {
 		title = (
-  			<View style={styles.titleLabelContainer}>
-  				<Text>{'Title: '}</Text>
+  			<View style={{padding: 8}}>
+  				<Text style={{color: "#ccc"}}>{'Class Title:'}</Text>
   				<TextInput
+  					style={styles.textInput}
   					onChangeText={(text) => this.setState({title: text})}
 					value={this.state.title}
-					placeholder={'Class Title'}
 					returnKeyType="done"
 					enablesReturnKeyAutomatically={true}
 					/>
+				<Text style={{marginTop: 8, color: "#ccc"}}>{'Class Description:'}</Text>
+ 				<TextInput
+ 					style={[styles.textInput, {height: 100}]}
+  					onChangeText={(text) => this.setState({description: text})}
+					value={this.state.description}
+					returnKeyType="done"
+					enablesReturnKeyAutomatically={true}
+					maxLength={200}
+					multiline={true}
+					/>					
   			</View>
 		)
   	} else {
   		title = (
-  			<View style={styles.titleLabelContainer}>
-  				<Text>{'Title: '}</Text>
-  				<Text>{this.state.title}</Text>
+  			<View style={{padding: 8}}>
+  				<Text style={{color: "#ccc"}}>{'Title: '}</Text>
+  				<Text style={{fontSize: 20}}>{this.state.title}</Text>
+				<Text style={{marginTop: 8, color: "#ccc"}}>{'Description: '}</Text>
+				<Text style={{fontSize: 20}}>{this.state.description}</Text>  				
   			</View>
 		)
   	}
 
-  	var action
-  	if (this.props.user.role === 'Teacher') {
-  		action = (
-  			<TouchableHighlight underlayColor='transparent' onPress={() => this.attendClass()}>
+  	var primary
+  	if (this.props.user.role !== 'Student') {
+  		primary = (
+  			<TouchableHighlight style={styles.action} underlayColor='transparent' onPress={() => this.saveChanges()}>
 				<Text style={[styles.status, {backgroundColor: '#337ab7'}]}>Save Changes</Text>
 			</TouchableHighlight>  
 		)
+  	} else {
+  		primary = (<View/>)
+  	}
+
+  	var action
+  	if (this.props.user.role === 'Teacher') {
+  		action = (<View/>)
   	} else {
   		const me = this.me()
   		if (me && me.status && me.status !== '') {
@@ -83,32 +116,59 @@ class ClassDetail extends Component {
   			}
   		} else {
 	  		action = (
-				<TouchableHighlight underlayColor='transparent' onPress={() => this.attendClass()}>
-					<Text style={[styles.status, {backgroundColor: '#337ab7'}]}>Attended course</Text>
-				</TouchableHighlight>  			
+				<TouchableHighlight style={styles.action} underlayColor='transparent' onPress={() => this.attendClass()}>
+					<Text style={[styles.status, {backgroundColor: '#337ab7'}]}>I attended this course!</Text>
+				</TouchableHighlight>	
 			)
 	  	}
   	}
 
-  	var studentList
-  	if (this.props.user.role !== 'Student') {
-  		studentList = (
-			<View>StudentList</View>
-		)
-  	} else {
-  		studentList = (<View/>)
-  	}
+	const students = Object.keys(this.props.detail.students)
+	const studentList = students.map((uid) => {
+		const student = this.props.detail.students[uid]
+		if (this.props.user.role !== 'Student') {		
+			return (
+				<TouchableHighlight 
+					key={uid}
+					underlayColor='transparent' 
+					onPress={() => this.props.onSelectStudent(uid)}>
+					<View style={{flexDirection: 'row', justifyContent: 'space-around', paddingTop: 16, paddingBottom: 16}}>
+						<Text>{student.username}</Text>
+						<Text style={{color: this.statusColor(student.status)}}>{student.status}</Text>
+					</View>
+				</TouchableHighlight>
+			)
+		} else {
+			return (
+				<View key={uid} style={{flexDirection: 'row', justifyContent: 'space-around', paddingTop: 16, paddingBottom: 16}}>
+					<Text>{student.username}</Text>
+				</View>
+			)
+		}
+	})
 
   	return (
-      <View style={styles.container}>
+      <View style={{flex: 1}}>
         <View style={styles.bar}/>
         <View style={styles.navigation}>
-        	<Text>{'Class Details'}</Text>
+        	<TouchableHighlight 
+        		underlayColor='transparent' 
+				onPress={() => this.props.navigator.pop()}>
+        		<Text style={styles.navButton}>{'Back'}</Text>
+        	</TouchableHighlight>
+        	<Text style={styles.navTitle}>{'Class Details'}</Text>
+        	<TouchableHighlight 
+        		underlayColor='transparent' 
+				onPress={() => console.log('logout')}>
+        		<Text style={styles.navButton}>{'Logout'}</Text>
+    		</TouchableHighlight>
         </View>
         <ScrollView>
     		<View>
     			{title}
+    			{primary}
     			{action}
+    			<Text style={{marginTop: 16, textAlign: 'center'}}>{'Students Attenting this class'}</Text>
     			{studentList}
     		</View>
     	</ScrollView>
@@ -118,9 +178,6 @@ class ClassDetail extends Component {
 }
 
 let styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
   bar: {
     backgroundColor: '#555358',
     height: 24
@@ -128,17 +185,38 @@ let styles = StyleSheet.create({
   navigation: {
   	height: 40,
   	backgroundColor: '#777579',
-  	justifyContent: 'center',
-  	alignItems: 'center'
-  },
-  titleLabelContainer: {
+  	justifyContent: 'space-around',
+  	alignItems: 'center',
   	flexDirection: 'row'
+  },
+  navTitle: {
+  	flex: 1,
+  	textAlign: 'center',
+  	color: '#FFFFFF'
+  },
+  navButton: {
+  	textAlign: 'center',
+  	color: '#FFFFFF',
+  	paddingRight: 8,
+  	paddingLeft: 8
   },
   status: {
   	color: '#FFFFFF',
   	textAlign: 'center',
   	paddingTop: 16,
-  	paddingBottom: 16
+  	paddingBottom: 16,
+  	margin: 4
+  },
+  textInput: {
+    fontSize: 15,
+    flex: 1,
+    height: 30,
+    color: '#C6CA53',
+    marginTop: 4,
+    marginBottom: 4,
+  },
+  action: {
+  	margin: 4
   }
 })
 

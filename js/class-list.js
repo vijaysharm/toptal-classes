@@ -80,10 +80,14 @@ class ClassList extends Component {
   }
 
   renderRow(item, _, index) {
+    var students = item.students || {}
+    var count = Object.keys(students).length
+    var label = count === 1 ? `${count} student` : `${count} students`
     return (
       <TouchableHighlight underlayColor='transparent' onPress={() => this.selectItem(item, index)}>
         <View style={styles.row}>
           <Text style={styles.rowTitle}>{item.title}</Text>
+          <Text style={{paddingRight: 8}}>{label}</Text>
         </View>
       </TouchableHighlight>
     )
@@ -140,10 +144,12 @@ let styles = StyleSheet.create({
     marginBottom: 2,
     marginRight: 4,
     marginLeft: 4,
-    justifyContent: 'center'
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   rowTitle: {
-    paddingLeft: 8
+    paddingLeft: 8,
+    flex: 1
   }
 })
 

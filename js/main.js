@@ -23,10 +23,6 @@ class App extends Component {
     super(props)
   }
 
-  componentWillReceiveProps (props) {
-  	
-  }
-
   renderScene(route, navigator) {
     if (this.isLoggedIn(this.props.login)) {
     	if (route.name === 'class-detail') {
@@ -36,6 +32,13 @@ class App extends Component {
             user={this.props.login}
             detail={this.props.classitem}
             onUpdateClass={this.props.classes.updateClass}
+            onSelectStudent={(uid) => {
+              console.log('selected student ' + uid)
+              navigator.push({
+                name: 'class-detail-student',
+                uid: uid
+              })
+            }}
             />
         )
     	}
@@ -45,7 +48,9 @@ class App extends Component {
           <ClassDetailStudent 
             navigator={navigator}
             user={this.props.login}
-            detail={route.detail}
+            detail={this.props.classitem}
+            onUpdateClass={this.props.classes.updateClass}
+            student={route.uid}
             />
         );
     	}
