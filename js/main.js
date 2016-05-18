@@ -32,7 +32,12 @@ class App extends Component {
             user={this.props.login}
             detail={this.props.classitem}
             onUpdateClass={this.props.classes.updateClass}
+            onUpdateStudentInClass={this.props.classes.updateStudentInClass}
             onLogout={this.props.user.logout}
+            onBack={() => {
+              navigator.pop()
+              this.props.classes.unselectClass()
+            }}
             onSelectStudent={(uid) => {
               console.log('selected student ' + uid)
               navigator.push({
@@ -50,7 +55,7 @@ class App extends Component {
             navigator={navigator}
             user={this.props.login}
             detail={this.props.classitem}
-            onUpdateClass={this.props.classes.updateClass}
+            onUpdateClass={this.props.classes.updateStudentInClass}
             onLogout={this.props.user.logout}
             student={route.uid}
             />

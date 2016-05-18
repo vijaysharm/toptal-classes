@@ -18,12 +18,14 @@ class ClassDetail extends Component {
   }
 
   attendClass() {
-  	var students = {}
-  	students[this.props.user.uid] = {
-  		username: this.props.user.username,
-  		status: 'pending'
-  	}
-	this.props.onUpdateClass(this.props.detail.cid, {students})
+	this.props.onUpdateStudentInClass(
+		this.props.detail.cid, 
+		this.props.user.uid, 
+		{
+			username: this.props.user.username,
+  			status: 'pending'
+  		}
+	)
   }
 
   saveChanges() {
@@ -154,7 +156,7 @@ class ClassDetail extends Component {
         <View style={styles.navigation}>
         	<TouchableHighlight 
         		underlayColor='transparent' 
-				onPress={() => this.props.navigator.pop()}>
+				onPress={() => this.props.onBack()}>
         		<Text style={styles.navButton}>{'Back'}</Text>
         	</TouchableHighlight>
         	<Text style={styles.navTitle}>{'Class Details'}</Text>
@@ -216,6 +218,9 @@ let styles = StyleSheet.create({
     color: '#C6CA53',
     marginTop: 4,
     marginBottom: 4,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 4
   },
   action: {
   	margin: 4

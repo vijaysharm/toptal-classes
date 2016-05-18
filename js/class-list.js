@@ -6,7 +6,7 @@ class ClassList extends Component {
     super(props)
 
     const dataSource = new ListView.DataSource({
-      rowHasChanged: (row1, row2) => row1.cid !== row2.cid
+      rowHasChanged: (row1, row2) => row1 !== row2
     })
 
     this.state = {

@@ -31,6 +31,12 @@ const updateClass = (cid, changes) => {
 	}
 }
 
+const updateStudentInClass = (cid, uid, changes) => {
+	return (dispatch, getState) => {
+		database.updateStudentInClass(cid, uid, changes)
+	}
+}
+
 const selectClass = (item) => {
 	return (dispatch, getState) => {
 		dispatch({
@@ -40,6 +46,19 @@ const selectClass = (item) => {
 	}
 }
 
+const unselectClass = () => {
+	return (dispatch, getState) => {
+		dispatch({
+			type: Types.CLASSES.UNSELECT
+		})
+	}
+}
+
 export default {
-	watchClasses, addClass, updateClass, selectClass
+	watchClasses, 
+	addClass, 
+	updateClass, 
+	updateStudentInClass, 
+	selectClass, 
+	unselectClass
 }

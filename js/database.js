@@ -60,6 +60,12 @@ const database = {
 	updateClass: function(cid, changes) {
 		const ref = firebase.child('classes').child(cid);
 		ref.update(changes)
+	},
+	updateStudentInClass: function(cid, uid, changes) {
+		var student = {};
+		student[uid] = changes;
+		const ref = firebase.child('classes').child(cid).child('students'); // .child(uid)
+		ref.update(student)
 	}
 };
 

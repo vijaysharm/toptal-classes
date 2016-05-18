@@ -9,12 +9,10 @@ class ClassDetailStudent extends Component {
 
   setStatus(status) {
   	const student = this.props.detail.students[this.props.student]
-	var students = {}
-  	students[this.props.student] = Object.assign({}, student, {
-  		status: status
-  	});
-
-	this.props.onUpdateClass(this.props.detail.cid, {students})
+	this.props.onUpdateClass(this.props.detail.cid, this.props.student, {
+		username: student.username,
+		status: status
+	})
   }
 
   statusColor(status) {
