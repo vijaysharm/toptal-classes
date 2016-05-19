@@ -38,4 +38,8 @@ Open either the iOS or Android project and launch on your running simulator/emul
 
 # Tests
 
-In construction
+I'm making use of Jest to run tests as descibed in the react-native [documentation](https://facebook.github.io/react-native/docs/testing.html#content).
+
+```
+# npm install && npm test
+```
