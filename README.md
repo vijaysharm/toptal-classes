@@ -23,10 +23,10 @@ The backing data store is Firebase.
 Here are some GIFs showing off the application
 
 Signing up and Logging in
-![](signup-login.gif)
+![https://raw.githubusercontent.com/vijaysharm/toptal-classes/master/signup-login.gif](signup-login.gif)
 
 Adding/Editing classes, Attending classes, Accepting/Rejecting attendence
-![](toptal-classes.gif)
+![https://raw.githubusercontent.com/vijaysharm/toptal-classes/master/toptal-classes.gif](toptal-classes.gif)
 
 ## Building
 
