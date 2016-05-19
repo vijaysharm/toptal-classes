@@ -18,6 +18,16 @@ We will not be scoring on the visual design of the application, but please try a
 
 I understand we were expected to write some kind of web app, but I personally had an interest in learning React Native, therefore this project was written using that technology. I'm a mobile developer, and the experience writing this app was amazing. I understand if this does not meet your requirements, but I'm hoping you will still take my submission into consideration.
 
+The backing data store is Firebase.
+
+Here are some GIFs showing off the application
+
+Signing up and Logging in
+![](signup-login.gif)
+
+Adding/Editing classes, Attending classes, Accepting/Rejecting attendence
+![](toptal-classes.gif)
+
 ## Building
 
 ```
